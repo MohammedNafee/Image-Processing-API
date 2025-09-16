@@ -1,5 +1,5 @@
 import express from "express";
-import resizedImages from "./api/resizedImages.ts";
+import resizedImages from "./api/imageProcessingController.ts";
 
 const routes = express.Router();
 

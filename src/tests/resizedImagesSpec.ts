@@ -3,13 +3,47 @@ import express from "express";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import resizedImages from "../routes/api/resizedImages.ts";
+import { processImage } from "../services/imageProcesser.ts";
+import processedImages from "../routes/api/imageProcessingController.ts";
+
+const app = express();
+app.use("/", processedImages);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const app = express();
-app.use("/", resizedImages);
+describe("Image Processing Functionality", () => {
+  const testFilePath = path.resolve(__dirname, "../../assets/full/encenadaport.jpg");
+  const outputFilePath = path.resolve(__dirname, "../../assets/thumbs/encenadaport_200x100.jpg");
+  const testWidth = 200;
+  const testHeight = 100;
+
+  afterAll(() => {
+    // Clean up the generated test image after tests
+    if (fs.existsSync(outputFilePath)) {
+      fs.unlinkSync(outputFilePath);
+    }
+  });
+
+  it("should resize an image to the specified dimensions", async () => {
+    // Ensure the test image exists
+    if (!fs.existsSync(testFilePath)) {
+      // Fail the test if the test image is missing
+      fail(`Test image missing: ${testFilePath}. Please add a testImage.jpg to assets/full.`);
+      return;
+    }
+
+    try {
+      await processImage(testFilePath, outputFilePath, testWidth, testHeight);
+    } catch (error) {
+      fail(`Image processing failed: ${error}`);
+    }
+
+    expect(fs.existsSync(outputFilePath)).toBe(true);
+
+    console.log("Passed: Image resized successfully");
+  });
+});
 
 describe("GET /images", () => {
   const filename = "encenadaport";
