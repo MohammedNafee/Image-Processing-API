@@ -9,9 +9,7 @@ const __dirname = path.dirname(__filename);
 resizedImages.get('/images', async (req, res) => {
     const { filename, width, height } = req.query;
     if (!filename || !width || !height) {
-        return res
-            .status(400)
-            .send('Missing required query parameters: filename, width, height');
+        return res.status(400).send('Missing required query parameters: filename, width, height');
     }
     const inputPath = path.join(__dirname, '../../../assets/full', `${filename}.jpg`);
     const outputPath = path.join(__dirname, '../../../assets/thumbs', `${filename}_${width}x${height}.jpg`);

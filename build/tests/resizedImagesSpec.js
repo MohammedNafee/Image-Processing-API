@@ -53,9 +53,7 @@ describe('GET /images', () => {
             fail(`Source image missing: ${fullImagePath}. Please add encenadaport.jpg to assets/full.`);
             return;
         }
-        const response = await supertest(app)
-            .get('/images')
-            .query({ filename, width, height });
+        const response = await supertest(app).get('/images').query({ filename, width, height });
         expect(response.status).toBe(200);
         expect(fs.existsSync(thumbPath)).toBe(true);
         expect(response.headers['content-type']).toContain('image');
@@ -64,9 +62,7 @@ describe('GET /images', () => {
     it('should serve the cached image on subsequent access', async () => {
         // This assumes the previous test has run and the thumb exists
         if (fs.existsSync(thumbPath)) {
-            const response = await supertest(app)
-                .get('/images')
-                .query({ filename, width, height });
+            const response = await supertest(app).get('/images').query({ filename, width, height });
             expect(response.status).toBe(200);
             expect(response.headers['content-type']).toContain('image');
             console.log('Passed: serves the cached image on subsequent access');
