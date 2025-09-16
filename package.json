@@ -1,0 +1,39 @@
+{
+  "name": "image-processing-api",
+  "version": "1.0.0",
+  "description": "First Project 'Image Processing API' Udacity",
+  "license": "ISC",
+  "author": "Mohammed Nafee",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "jasmine": "jasmine",
+    "lint": "eslint",
+    "prettier": "prettier --config .prettierrc --write",
+    "test": "npm run build && npm run jasmine",
+    "start": "nodemon --exec ts-node --experimental-specifier-resolution=node src/index.ts"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/jasmine": "^5.1.9",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.4.0",
+    "@types/sharp": "^0.31.1",
+    "@types/supertest": "^6.0.3",
+    "eslint": "^8.8.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^3.1.10",
+    "prettier": "^2.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "jasmine": "^5.10.0",
+    "jasmine-spec-reporter": "^7.0.0",
+    "sharp": "^0.34.3",
+    "supertest": "^7.1.4"
+  }
+}
