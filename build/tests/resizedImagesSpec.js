@@ -5,7 +5,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { processImage } from "../services/imageProcesser.js";
 import processedImages from "../routes/api/imageProcessingController.js";
-import imageProcessor from "../services/imageProcesser.js";
 const app = express();
 app.use("/", processedImages);
 const __filename = fileURLToPath(import.meta.url);
@@ -36,6 +35,49 @@ describe("Image Processing Functionality", () => {
         }
         expect(fs.existsSync(outputFilePath)).toBe(true);
         console.log("Passed: Image resized successfully");
+    });
+    it("should throw an error if width or height is invalid", async () => {
+        try {
+            await processImage(testFilePath, outputFilePath, NaN, testHeight);
+            fail("Expected an error for invalid width");
+        }
+        catch (err) {
+            if (err instanceof Error) {
+                expect(err.message).toMatch("Width and height must be valid numbers");
+            }
+            else {
+                fail("Thrown value is not an Error");
+            }
+        }
+        try {
+            await processImage(testFilePath, outputFilePath, testWidth, -100);
+            fail("Expected an error for non-positive height");
+        }
+        catch (err) {
+            if (err instanceof Error) {
+                expect(err.message).toMatch("Width and height must be positive numbers");
+            }
+            else {
+                fail("Thrown value is not an Error");
+            }
+        }
+        console.log("Passed: Error thrown for invalid dimensions");
+    });
+    it("should throw an error if the input file does not exist", async () => {
+        const fakeFile = path.resolve(__dirname, "../../assets/full/nonexistent.jpg");
+        try {
+            await processImage(fakeFile, outputFilePath, testWidth, testHeight);
+            fail("Expected an error for missing input file");
+        }
+        catch (err) {
+            if (err instanceof Error) {
+                expect(err.message).toMatch("Input file .* not found");
+            }
+            else {
+                fail("Thrown value is not an Error");
+            }
+        }
+        console.log("Passed: Error thrown for missing input file");
     });
 });
 describe("GET /images", () => {
