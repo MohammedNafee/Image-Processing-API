@@ -65,8 +65,10 @@ assets/
 src/
   routes/
     api/
-      resizedImages.ts
+      imageProcessingController.ts
     index.ts
+  services/
+    imageProcesser.ts
   index.ts
   tests/
     resizedImagesSpec.ts
