@@ -5,9 +5,8 @@ export async function processImage(inputPath, outputPath, width, height) {
     if (fs.existsSync(outputPath)) {
         return outputPath;
     }
-    await sharp(inputPath)
-        .resize(width, height)
-        .toFile(outputPath);
+    await sharp(inputPath).resize(width, height).toFile(outputPath);
     return outputPath;
 }
+export default { processImage };
 //# sourceMappingURL=imageProcesser.js.map

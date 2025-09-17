@@ -5,6 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { processImage } from "../services/imageProcesser.js";
 import processedImages from "../routes/api/imageProcessingController.js";
+import imageProcessor from "../services/imageProcesser.js";
 const app = express();
 app.use("/", processedImages);
 const __filename = fileURLToPath(import.meta.url);
@@ -67,13 +68,25 @@ describe("GET /images", () => {
         expect(response.text).toContain("Missing required query parameters");
         console.log("Passed: returns 400 if required query parameters are missing");
     });
-    it("should return 500 if the source image does not exist", async () => {
+    it("should return 404 if the source image does not exist", async () => {
         const response = await supertest(app)
             .get("/images")
             .query({ filename: "nonexistentfile", width, height });
-        expect(response.status).toBe(500);
-        expect(response.text).toContain("Error processing image");
-        console.log("Passed: returns 500 if the source image does not exist");
+        expect(response.status).toBe(404);
+        expect(response.text).toContain(`Input file "nonexistentfile.jpg" not found.`);
+        console.log("Passed: returns 404 if the source image does not exist");
+    });
+    it("should return 400 if width or height is not a number", async () => {
+        const response = await supertest(app).get("/images?filename=encenadaport&width=abc&height=200");
+        expect(response.status).toBe(400);
+        expect(response.text).toContain("Width and height must be valid numbers.");
+        console.log("Passed: returns 400 if width or height is not a number");
+    });
+    it("should return 400 if width or height is non-positive", async () => {
+        const response = await supertest(app).get("/images?filename=encenadaport&width=0&height=-100");
+        expect(response.status).toBe(400);
+        expect(response.text).toContain("Width and height must be positive numbers.");
+        console.log("Passed: returns 400 if width or height is non-positive");
     });
     it("should resize and cache the image on first access", async () => {
         // Make sure the source image exists for this test to pass!

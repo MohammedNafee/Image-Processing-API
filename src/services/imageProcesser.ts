@@ -15,3 +15,5 @@ export async function processImage(
   await sharp(inputPath).resize(width, height).toFile(outputPath);
   return outputPath;
 }
+
+export default { processImage };
